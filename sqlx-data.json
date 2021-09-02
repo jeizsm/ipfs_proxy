@@ -1,0 +1,16 @@
+{
+  "db": "PostgreSQL",
+  "a24d49e852e5675a7aa820b2f6722c05f915e46a552a4d9541e90784156720f4": {
+    "query": "INSERT INTO users(username, password) VALUES ($1, $2)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text"
+        ]
+      },
+      "nullable": []
+    }
+  }
+}
