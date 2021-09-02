@@ -1,8 +1,8 @@
 # How to run
-install and run ipfs daemon [ipfs instructions](https://docs.ipfs.io/install/command-line/#official-distributions)
-install and run postgresql 
-edit environment variables if necessary in env file
-cargo run
+*install and run ipfs daemon [ipfs instructions](https://docs.ipfs.io/install/command-line/#official-distributions)
+*install and run postgresql 
+*edit environment variables if necessary in env file
+*cargo run
 # How to test
 `curl --header 'Content-Type: application/json' -v -X POST http://localhost:5002/service_api/sign_up -d'{"username": "hello", "password": "world"}'`
 
