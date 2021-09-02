@@ -5,14 +5,19 @@ async fn greet(req: HttpRequest) -> impl Responder {
     format!("Hello {}!", &name)
 }
 
+async fn proxy(req: HttpRequest) -> impl Responder {
+    "hello ipfs\n"
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .service(web::scope("/api/v0").default_service(web::route().to(proxy)))
             .route("/", web::get().to(greet))
             .route("/{name}", web::get().to(greet))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 8082))?
     .run()
     .await
 }
