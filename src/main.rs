@@ -32,6 +32,7 @@ async fn main() -> std::io::Result<()> {
             "Can't connect to database {}",
             config.database_url
         ));
+    let clone_config = config.clone();
     HttpServer::new(move || {
         let ipfs_auth = HttpAuthentication::bearer(auth::api_key);
         let api_auth = HttpAuthentication::bearer(auth::jwt);
@@ -41,7 +42,7 @@ async fn main() -> std::io::Result<()> {
             .allow_any_method();
         App::new()
             .data(pool.clone())
-            .data(config.clone())
+            .data(clone_config.clone())
             .wrap(cors)
             .wrap(actix_web::middleware::Logger::default())
             .service(
@@ -64,7 +65,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(greet))
             .route("/{name}", web::get().to(greet))
     })
-    .bind(("127.0.0.1", 5002))?
+    .bind((config.host, config.port))?
     .run()
     .await
 }

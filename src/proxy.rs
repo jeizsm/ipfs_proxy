@@ -28,8 +28,9 @@ impl IntoHttpResponse for ClientResponse<dev::Decompress<dev::Payload>> {
 pub async fn proxy(
     req: HttpRequest,
     body: web::Payload,
+    config: web::Data<crate::Config>,
 ) -> actix_web::Result<HttpResponse, SendRequestError> {
-    let ipfs_host = "localhost:5001";
+    let ipfs_host = format!("{}:{}", config.ipfs_host, config.ipfs_port);
     let new_uri = format!("http://{}{}", ipfs_host, req.uri());
     Client::default()
         .request_from(&new_uri, req.head())
