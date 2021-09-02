@@ -3,7 +3,7 @@
 
 - install and run postgresql 
 
-- edit environment variables if necessary in env file
+- edit environment variables if necessary in .env file
 
 - cargo run
 
