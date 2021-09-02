@@ -1,16 +1,281 @@
 {
   "db": "PostgreSQL",
-  "a24d49e852e5675a7aa820b2f6722c05f915e46a552a4d9541e90784156720f4": {
-    "query": "INSERT INTO users(username, password) VALUES ($1, $2)",
+  "1db85f308db5332f73a17002cf79800d972578ca22f7f893f5e8c3cf45b243e0": {
+    "query": "UPDATE api_keys SET enabled = 'false' WHERE api_key = $1 AND user_id = $2 RETURNING *",
     "describe": {
-      "columns": [],
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "api_key",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 2,
+          "name": "user_id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "326626885a97dc746bc1bcc4974d02519080bd9197cda9d0179bfafba9195367": {
+    "query": "SELECT * FROM api_keys WHERE api_key = $1 and enabled = 'true'",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "api_key",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 2,
+          "name": "user_id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "48716da0e1a66d7d5ecb1b006ac0a96796d1b689d544e7d9cc888eac5ada6027": {
+    "query": "INSERT INTO api_keys(api_key, user_id) VALUES ($1, $2) RETURNING *",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "api_key",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 2,
+          "name": "user_id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 3,
+          "name": "enabled",
+          "type_info": "Bool"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "843923b9a0257cf80f1dff554e7dc8fdfc05f489328e8376513124dfb42996e3": {
+    "query": "SELECT * FROM users WHERE id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "password",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "96a72d1b54083e5cc9b0b20c45285eb543b85cbc2e2c65da71b53c9f56e44a3e": {
+    "query": "SELECT logs.id, logs.time, logs.api_key_id FROM logs INNER JOIN api_keys ON logs.api_key_id = api_keys.id WHERE api_keys.user_id = $1",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "time",
+          "type_info": "Timestamp"
+        },
+        {
+          "ordinal": 2,
+          "name": "api_key_id",
+          "type_info": "Int8"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "b244e1bc16b352c9e8b5ec665e8ece0de167cde882c9c9fc8f3e2edc8d8a347b": {
+    "query": "SELECT * FROM users WHERE username = $1 AND password = $2",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "password",
+          "type_info": "Text"
+        }
+      ],
       "parameters": {
         "Left": [
           "Text",
           "Text"
         ]
       },
-      "nullable": []
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "c663eefe3158c184a030e568e6cb178fd05add1d7287bc040e8035ed68545755": {
+    "query": "INSERT INTO logs (api_key_id) VALUES ($1) RETURNING * ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "api_key_id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 2,
+          "name": "time",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "e38f255a59e813ceda22d340225702ae5f8eed9ddb10c4c83c02cecdece888d4": {
+    "query": "INSERT INTO users(username, password) VALUES ($1, $2) RETURNING *",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "id",
+          "type_info": "Int8"
+        },
+        {
+          "ordinal": 1,
+          "name": "username",
+          "type_info": "Text"
+        },
+        {
+          "ordinal": 2,
+          "name": "password",
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
     }
   }
 }

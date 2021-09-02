@@ -57,6 +57,13 @@ pub struct JwtKey {
     pub key: String,
 }
 
+#[derive(Serialize, Debug)]
+pub struct LogsDb {
+    pub id: i64,
+    pub api_key_id: i64,
+    pub time: time::PrimitiveDateTime,
+}
+
 pub async fn create_api_key(
     pool: web::Data<PgPool>,
     req: HttpRequest,
@@ -80,18 +87,41 @@ pub async fn create_api_key(
 pub async fn disable_api_key(
     api_key: web::Json<ApiKey>,
     pool: web::Data<PgPool>,
+    req: HttpRequest,
 ) -> Result<HttpResponse, actix_web::Error> {
+    let extensions = req.extensions();
+    let user_id = extensions.get::<i64>().unwrap();
     let conn = pool.get_ref();
     let key = sqlx::query_as!(
         ApiKeyDb,
-        "UPDATE api_keys SET enabled = 'false' WHERE api_key = $1 RETURNING *",
+        "UPDATE api_keys SET enabled = 'false' WHERE api_key = $1 AND user_id = $2 RETURNING *",
         api_key.api_key,
+        user_id
     )
     .fetch_one(conn)
     .await
     .map_err(|err| Error::SqlxError(err))?;
     Ok(HttpResponse::Ok().json(key))
 }
+
+pub async fn list_api_logs(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+) -> Result<HttpResponse, actix_web::Error> {
+    let extensions = req.extensions();
+    let user_id = extensions.get::<i64>().unwrap();
+    let conn = pool.get_ref();
+    let logs = sqlx::query_as!(
+        LogsDb,
+        "SELECT logs.id, logs.time, logs.api_key_id FROM logs INNER JOIN api_keys ON logs.api_key_id = api_keys.id WHERE api_keys.user_id = $1",
+        user_id
+    )
+    .fetch_all(conn)
+    .await
+    .map_err(|err| Error::SqlxError(err))?;
+    Ok(HttpResponse::Ok().json(logs))
+}
+
 pub async fn sign_up(
     user: web::Json<User>,
     pool: web::Data<PgPool>,

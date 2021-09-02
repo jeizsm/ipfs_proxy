@@ -19,9 +19,12 @@ pub async fn api_key(
 ) -> Result<ServiceRequest, actix_web::Error> {
     let pool = req.app_data::<web::Data<PgPool>>().unwrap().get_ref();
     let uuid = Uuid::parse_str(credentials.token()).unwrap();
-    let key = sqlx::query!("SELECT * FROM api_keys WHERE api_key = $1", uuid)
-        .fetch_one(pool)
-        .await;
+    let key = sqlx::query!(
+        "SELECT * FROM api_keys WHERE api_key = $1 and enabled = 'true'",
+        uuid
+    )
+    .fetch_one(pool)
+    .await;
     if key.is_ok() {
         let key = sqlx::query!(
             "INSERT INTO logs (api_key_id) VALUES ($1) RETURNING * ",

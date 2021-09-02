@@ -55,6 +55,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/login", web::post().to(login))
                     .service(
                         web::resource("/api_key")
+                            .route(web::get().to(list_api_logs))
                             .wrap(api_auth)
                             .route(web::post().to(create_api_key))
                             .route(web::delete().to(disable_api_key)),

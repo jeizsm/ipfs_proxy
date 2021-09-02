@@ -21,4 +21,5 @@ jwt = "0.14.0"
 serde = "1.0.130"
 sha2 = "0.9.6"
 sqlx = { version = "0.4", features = [ "runtime-actix-rustls", "postgres", "offline", "uuid", "time" ] }
+time = { version = "0.2", features = [ "serde" ] }
 uuid = { version = "0.8.2", features = [ "serde", "v4" ] }
